@@ -1,0 +1,26 @@
+[tool.poetry]
+name = "starlite-sessions"
+version = "1.0.0"
+description = "Starlite Sessions Toolkit"
+authors = ["Na'aman Hirschfeld <nhirschfeld@gmail.com>"]
+license = "MIT"
+
+[tool.poetry.dependencies]
+python = ">=3.7,<4.0"
+starlite = ">=1.17.0"
+
+[tool.poetry.dev-dependencies]
+mkdocs_gen_files = "*"
+pre-commit = "*"
+pytest = "*"
+pytest-asyncio = "*"
+pytest-cov = "*"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+
+[tool.pyright]
+include = ["starlite_sessions", "tests"]
+exclude = []
