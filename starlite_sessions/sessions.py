@@ -7,7 +7,7 @@ from starlite.middleware.authentication import (
     AbstractAuthenticationMiddleware,
     AuthenticationResult,
 )
-from starlite.middleware.base import MiddlewareProtocol
+from starlite.middleware.base import DefineMiddleware, MiddlewareProtocol
 from starlite.middleware.session import SessionCookieConfig, SessionMiddleware
 from starlite.types import Empty, SyncOrAsyncUnion
 from starlite.utils import AsyncCallable
@@ -48,6 +48,44 @@ class SessionAuthConfig(SessionCookieConfig):
             An instance of AsyncCallable wrapping the callable.
         """
         return AsyncCallable(value)
+
+    @property
+    def middleware(self) -> DefineMiddleware:
+        """Use this property to insert the config into a middleware list on one
+        of the application layers.
+
+        Examples:
+
+            ```python
+            from typing import Any
+            from os import urandom
+
+            from starlite import Starlite, Request, get
+            from starlite_session import SessionAuthConfig
+
+
+            async def retrieve_user_from_session(session: dict[str, Any]) -> Any:
+                # implement logic here to retrieve a 'user' datum given the session dictionary
+                ...
+
+
+            session_auth_config = SessionAuthConfig(
+                secret=urandom(16), retrieve_user_handler=retrieve_user_from_session
+            )
+
+
+            @get("/")
+            def my_handler(request: Request) -> None:
+                ...
+
+
+            app = Starlite(route_handlers=[my_handler], middleware=[session_auth_config.middleware])
+            ```
+
+        Returns:
+            An instance of DefineMiddleware including 'self' as the config kwarg value.
+        """
+        return DefineMiddleware(MiddlewareWrapper, config=self)
 
 
 class MiddlewareWrapper(MiddlewareProtocol):
