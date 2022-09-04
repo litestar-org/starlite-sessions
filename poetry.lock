@@ -524,7 +524,7 @@ full = ["itsdangerous", "jinja2", "python-multipart", "pyyaml", "requests"]
 
 [[package]]
 name = "starlite"
-version = "1.17.0"
+version = "1.17.1"
 description = "Light-weight and flexible ASGI API Framework"
 category = "main"
 optional = false
@@ -987,8 +987,8 @@ starlette = [
     {file = "starlette-0.20.4.tar.gz", hash = "sha256:42fcf3122f998fefce3e2c5ad7e5edbf0f02cf685d646a83a08d404726af5084"},
 ]
 starlite = [
-    {file = "starlite-1.17.0-py3-none-any.whl", hash = "sha256:01db0a8514c856e294ca462a44b7f1a87a1e8c86f0e986d9fd8389f5590ab12a"},
-    {file = "starlite-1.17.0.tar.gz", hash = "sha256:9b13ac34d4e18517028f7190485a60facf8538f2dc849427b6e877692648d11b"},
+    {file = "starlite-1.17.1-py3-none-any.whl", hash = "sha256:635b9955c6b7dc5ed8bf71b457f0f02f786307e1fc1ff18b961495dbefc9384b"},
+    {file = "starlite-1.17.1.tar.gz", hash = "sha256:8a82b5b6296ae63052a77143af68568285c2aeb40cf164e5156c954da58980e8"},
 ]
 toml = [
     {file = "toml-0.10.2-py2.py3-none-any.whl", hash = "sha256:806143ae5bfb6a3c6e736a764057db0e6a0e05e338b5630894a5f779cabb4f9b"},

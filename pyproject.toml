@@ -7,7 +7,7 @@ license = "MIT"
 
 [tool.poetry.dependencies]
 python = ">=3.7,<4.0"
-starlite = ">=1.17.0"
+starlite = ">=1.17.1"
 
 [tool.poetry.dev-dependencies]
 mkdocs_gen_files = "*"
@@ -20,6 +20,45 @@ pytest-cov = "*"
 requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
 
+[tool.black]
+line-length = 120
+include = '\.pyi?$'
+
+[tool.isort]
+profile = "black"
+multi_line_output = 3
+
+[tool.pylint.MESSAGE_CONTROL]
+disable = [
+    "line-too-long",
+    "missing-module-docstring",
+    "missing-class-docstring",
+    "too-few-public-methods",
+]
+enable = "useless-suppression"
+extension-pkg-allow-list = ["pydantic"]
+
+[tool.pylint.REPORTS]
+reports = "no"
+
+[tool.pylint.FORMAT]
+max-line-length = "120"
+
+[tool.pylint.VARIABLES]
+ignored-argument-names = "args|kwargs|_|__"
+
+[tool.pylint.BASIC]
+good-names = "_,__,i,e"
+no-docstring-rgx="(__.*__|main|test.*|.*test|.*Test|^_.*)$"
+
+[tool.coverage.run]
+omit = ["*/tests/*"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+
+[tool.pycln]
+all = true
 
 [tool.pyright]
 include = ["starlite_sessions", "tests"]
