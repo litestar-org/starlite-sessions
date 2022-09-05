@@ -41,6 +41,7 @@ pre-commit = "*"
 pytest = "*"
 pytest-asyncio = "*"
 pytest-cov = "*"
+starlite = {version = "^1.17.1", extras = ["full"]}
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

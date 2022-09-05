@@ -12,7 +12,7 @@ from starlite.middleware.session import SessionCookieConfig, SessionMiddleware
 from starlite.types import Empty, SyncOrAsyncUnion
 from starlite.utils import AsyncCallable
 
-if TYPE_CHECKING:
+if TYPE_CHECKING:  # pragma: no cover
     from starlette.requests import HTTPConnection
     from starlite.app import Starlite
     from starlite.types import ASGIApp, Receive, Scope, Send
