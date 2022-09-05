@@ -1,4 +1,14 @@
-from typing import TYPE_CHECKING, Any, Callable, Dict, List, Optional, Union, cast
+from typing import (
+    TYPE_CHECKING,
+    Any,
+    Awaitable,
+    Callable,
+    Dict,
+    List,
+    Optional,
+    Union,
+    cast,
+)
 
 from pydantic import validator
 from starlite.exceptions import NotAuthorizedException
@@ -38,7 +48,7 @@ class SessionAuthConfig(SessionCookieConfig):
     @validator("retrieve_user_handler")
     def validate_retrieve_user_handler(  # pylint: disable=no-self-argument
         cls, value: RetrieveUserHandler
-    ) -> AsyncCallable[[Dict[str, Any]], Any]:
+    ) -> Callable[[Dict[str, Any]], Awaitable[Any]]:
         """This validator ensures that the passed in value does not get bound.
 
         Args:
@@ -124,7 +134,7 @@ class MiddlewareWrapper(MiddlewareProtocol):
             auth_middleware = SessionAuthMiddleware(
                 app=self.app,
                 exclude=self.config.exclude,
-                retrieve_user_handler=cast("AsyncCallable[[Dict[str, Any]], Any]", self.config.retrieve_user_handler),  # type: ignore
+                retrieve_user_handler=cast("Callable[[Dict[str, Any]], Awaitable[Any]]", self.config.retrieve_user_handler),  # type: ignore
             )
             exception_middleware = ExceptionHandlerMiddleware(
                 app=auth_middleware,
@@ -140,7 +150,7 @@ class SessionAuthMiddleware(AbstractAuthenticationMiddleware):
         self,
         app: "ASGIApp",
         exclude: Optional[Union[str, List[str]]],
-        retrieve_user_handler: AsyncCallable[[Dict[str, Any]], Any],
+        retrieve_user_handler: Callable[[Dict[str, Any]], Awaitable[Any]],
     ):
         """This is an abstract AuthenticationMiddleware that allows users to
         create their own AuthenticationMiddleware by extending it and
