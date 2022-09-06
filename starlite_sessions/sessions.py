@@ -180,7 +180,7 @@ class SessionAuthMiddleware(AbstractAuthenticationMiddleware):
         Returns:
             [AuthenticationResult][starlite.middleware.authentication.AuthenticationResult]
         """
-        if not connection.session or connection.session is Empty:
+        if not connection.session or connection.session is Empty:  # type: ignore
             # the assignment of 'Empty' forces the session middleware to clear session data.
             connection.scope["session"] = Empty
             raise NotAuthorizedException("no session data found")
