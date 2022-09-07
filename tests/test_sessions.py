@@ -9,10 +9,10 @@ from starlette.status import (
     HTTP_204_NO_CONTENT,
     HTTP_401_UNAUTHORIZED,
 )
-from starlite import Request, delete, get, post
+from starlite import OpenAPIConfig, Request, Starlite, delete, get, post
 from starlite.testing import create_test_client
 
-from starlite_sessions import SessionAuthConfig
+from starlite_sessions import SessionAuth
 
 
 class User(BaseModel):
@@ -21,7 +21,7 @@ class User(BaseModel):
     email: str
 
 
-def test_session_auth() -> None:
+def test_authentication() -> None:
     @post("/login")
     def login_handler(request: Request[Any, Any], data: Dict[str, Any]) -> None:
         request.set_session(data)
@@ -41,7 +41,7 @@ def test_session_auth() -> None:
             return user_instance
         return None
 
-    session_auth = SessionAuthConfig(
+    session_auth = SessionAuth(
         secret=SecretBytes(urandom(16)), exclude=["login"], retrieve_user_handler=retrieve_user_handler
     )
 
@@ -71,3 +71,35 @@ def test_session_auth() -> None:
 
         response = client.get(f"user/{user_instance.id}")
         assert response.status_code == HTTP_401_UNAUTHORIZED
+
+
+def test_openapi() -> None:
+    def retrieve_user_handler(session_data: Dict[str, Any]) -> Optional[User]:
+        return None
+
+    session_auth = SessionAuth(secret=SecretBytes(urandom(16)), retrieve_user_handler=retrieve_user_handler)
+    openapi_config = OpenAPIConfig(
+        title="My API",
+        version="1.0.0",
+        components=[session_auth.openapi_components],
+        security=[session_auth.security_requirement],
+    )
+
+    app = Starlite(route_handlers=[], openapi_config=openapi_config)
+    assert app.openapi_schema.dict(exclude_none=True) == {  # type: ignore
+        "openapi": "3.1.0",
+        "info": {"title": "My API", "version": "1.0.0"},
+        "servers": [{"url": "/"}],
+        "paths": {},
+        "components": {
+            "securitySchemes": {
+                "sessionCookie": {
+                    "type": "apiKey",
+                    "description": "Session cookie authentication.",
+                    "name": "Set-Cookie",
+                    "security_scheme_in": "cookie",
+                }
+            }
+        },
+        "security": [{"sessionCookie": []}],
+    }

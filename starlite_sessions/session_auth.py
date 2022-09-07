@@ -11,6 +11,11 @@ from typing import (
 )
 
 from pydantic import validator
+from pydantic_openapi_schema.v3_1_0 import (
+    Components,
+    SecurityRequirement,
+    SecurityScheme,
+)
 from starlite.exceptions import NotAuthorizedException
 from starlite.middleware import ExceptionHandlerMiddleware
 from starlite.middleware.authentication import (
@@ -31,7 +36,7 @@ if TYPE_CHECKING:  # pragma: no cover
 RetrieveUserHandler = Callable[[Dict[str, Any]], SyncOrAsyncUnion[Any]]
 
 
-class SessionAuthConfig(SessionCookieConfig):
+class SessionAuth(SessionCookieConfig):
     retrieve_user_handler: RetrieveUserHandler
     """
     Callable that receives the session dictionary after it has been decoded and returns a 'user' value.
@@ -43,6 +48,10 @@ class SessionAuthConfig(SessionCookieConfig):
     exclude: Optional[Union[str, List[str]]] = None
     """
     A pattern or list of patterns to skip in the authentication middleware.
+    """
+    openapi_security_scheme_name: str = "sessionCookie"
+    """
+    The value to use for the OpenAPI security scheme and security requirements
     """
 
     @validator("retrieve_user_handler")
@@ -71,7 +80,7 @@ class SessionAuthConfig(SessionCookieConfig):
             from os import urandom
 
             from starlite import Starlite, Request, get
-            from starlite_session import SessionAuthConfig
+            from starlite_session import SessionAuth
 
 
             async def retrieve_user_from_session(session: dict[str, Any]) -> Any:
@@ -79,7 +88,7 @@ class SessionAuthConfig(SessionCookieConfig):
                 ...
 
 
-            session_auth_config = SessionAuthConfig(
+            session_auth_config = SessionAuth(
                 secret=urandom(16), retrieve_user_handler=retrieve_user_from_session
             )
 
@@ -97,9 +106,35 @@ class SessionAuthConfig(SessionCookieConfig):
         """
         return DefineMiddleware(MiddlewareWrapper, config=self)
 
+    @property
+    def openapi_components(self) -> Components:
+        """Creates OpenAPI documentation for the JWT auth schema used.
+
+        Returns:
+            An [Components][pydantic_schema_pydantic.v3_1_0.components.Components] instance.
+        """
+        return Components(
+            securitySchemes={
+                self.openapi_security_scheme_name: SecurityScheme(
+                    type="apiKey",
+                    name="Set-Cookie",
+                    security_scheme_in="cookie",  # pyright: ignore
+                    description="Session cookie authentication.",
+                )
+            }
+        )
+
+    @property
+    def security_requirement(self) -> SecurityRequirement:
+        """
+        Returns:
+            An OpenAPI 3.1 [SecurityRequirement][pydantic_schema_pydantic.v3_1_0.security_requirement.SecurityRequirement] dictionary.
+        """
+        return {self.openapi_security_scheme_name: []}
+
 
 class MiddlewareWrapper(MiddlewareProtocol):
-    def __init__(self, app: "ASGIApp", config: SessionAuthConfig):
+    def __init__(self, app: "ASGIApp", config: SessionAuth):
         """This class creates a small stack of middlewares: It wraps the
         SessionAuthMiddleware inside ExceptionHandlerMiddleware, and it wrap
         this inside SessionMiddleware. This allows the auth middleware to raise
@@ -108,7 +143,7 @@ class MiddlewareWrapper(MiddlewareProtocol):
 
         Args:
             app: An ASGIApp, this value is the next ASGI handler to call in the middleware stack.
-            config: An instance of SessionAuthConfig
+            config: An instance of SessionAuth
         """
         super().__init__(app)
         self.app = app
