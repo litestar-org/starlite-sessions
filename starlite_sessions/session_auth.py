@@ -136,7 +136,7 @@ class SessionAuth(SessionCookieConfig):
 class MiddlewareWrapper(MiddlewareProtocol):
     def __init__(self, app: "ASGIApp", config: SessionAuth):
         """This class creates a small stack of middlewares: It wraps the
-        SessionAuthMiddleware inside ExceptionHandlerMiddleware, and it wrap
+        SessionAuthMiddleware inside ExceptionHandlerMiddleware, and it wraps
         this inside SessionMiddleware. This allows the auth middleware to raise
         exceptions and still have the response handled, while having the
         session cleared.
@@ -154,7 +154,7 @@ class MiddlewareWrapper(MiddlewareProtocol):
         """This is the entry point to the middleware. If
         'self.had_wrapped_middleware' is False, the wrapper will update the
         value of 'self.app' to be the middleware stack described in the
-        __init__ method. Otherwise it will call the next ASGI handler.
+        __init__ method. Otherwise, it will call the next ASGI handler.
 
         Args:
             scope: The ASGI connection scope.
