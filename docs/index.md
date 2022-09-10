@@ -145,7 +145,7 @@ def get_user(request: Request[User, dict[Literal["user_id"], str]]) -> Any:
     return request.user
 
 
-# We add the jwt security schema to the OpenAPI config.
+# We add the session security schema to the OpenAPI config.
 openapi_config = OpenAPIConfig(
     title="My API",
     version="1.0.0",
