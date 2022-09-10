@@ -108,7 +108,8 @@ class SessionAuth(SessionCookieConfig):
 
     @property
     def openapi_components(self) -> Components:
-        """Creates OpenAPI documentation for the JWT auth schema used.
+        """Creates OpenAPI documentation for the Session Authentication schema
+        used.
 
         Returns:
             An [Components][pydantic_schema_pydantic.v3_1_0.components.Components] instance.
@@ -177,6 +178,7 @@ class MiddlewareWrapper(MiddlewareProtocol):
                 debug=starlite_app.debug,
             )
             self.app = SessionMiddleware(app=exception_middleware, config=self.config)
+            self.has_wrapped_middleware = True
         await self.app(scope, receive, send)
 
 
@@ -187,9 +189,7 @@ class SessionAuthMiddleware(AbstractAuthenticationMiddleware):
         exclude: Optional[Union[str, List[str]]],
         retrieve_user_handler: Callable[[Dict[str, Any]], Awaitable[Any]],
     ):
-        """This is an abstract AuthenticationMiddleware that allows users to
-        create their own AuthenticationMiddleware by extending it and
-        overriding the 'authenticate_request' method.
+        """A Starlite Authentication Middleware that uses session cookies.
 
         Args:
             app: An ASGIApp, this value is the next ASGI handler to call in the middleware stack.

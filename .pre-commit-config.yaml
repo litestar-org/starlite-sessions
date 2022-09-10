@@ -77,7 +77,7 @@ repos:
     hooks:
       - id: flake8-markdown
   - repo: https://github.com/pycqa/pylint
-    rev: "v2.15.0"
+    rev: "v2.15.2"
     hooks:
       - id: pylint
         exclude: "test_*|docs"
@@ -89,7 +89,7 @@ repos:
       - id: mypy
         additional_dependencies: [starlite, mkdocs_gen_files]
   - repo: https://github.com/RobertCraigie/pyright-python
-    rev: v1.1.269
+    rev: v1.1.270
     hooks:
       - id: pyright
         additional_dependencies: [starlite, mkdocs_gen_files, pytest]
