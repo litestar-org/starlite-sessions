@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "starlite-sessions"
-version = "1.0.0"
+version = "1.1.0"
 description = "Starlite Sessions Toolkit"
 authors = ["Na'aman Hirschfeld <nhirschfeld@gmail.com>"]
 maintainers = ["Na'aman Hirschfeld <nhirschfeld@gmail.com>", "Peter Schutt <peter.github@proton.me>", "Cody Fincher <cody.fincher@gmail.com>"]
@@ -41,7 +41,7 @@ pre-commit = "*"
 pytest = "*"
 pytest-asyncio = "*"
 pytest-cov = "*"
-starlite = {version = "^1.17.1", extras = ["full"]}
+starlite = {version = ">=1.17.1", extras = ["full"]}
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
