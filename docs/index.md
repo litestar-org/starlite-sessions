@@ -6,6 +6,9 @@
 
 <center>
 
+![PyPI - License](https://img.shields.io/pypi/l/starlite-sessions?color=blue)
+![PyPI - Python Version](https://img.shields.io/pypi/pyversions/starlite-sessions)
+
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=starlite-api_starlite-sessions&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=starlite-api_starlite-sessions)
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=starlite-api_starlite-sessions&metric=coverage)](https://sonarcloud.io/summary/new_code?id=starlite-api_starlite-sessions)
 
