@@ -28,8 +28,7 @@ from starlite.types import Empty, SyncOrAsyncUnion
 from starlite.utils import AsyncCallable
 
 if TYPE_CHECKING:  # pragma: no cover
-    from starlette.requests import HTTPConnection
-    from starlite.app import Starlite
+    from starlite.connection import ASGIConnection
     from starlite.types import ASGIApp, Receive, Scope, Send
 
 
@@ -146,7 +145,6 @@ class MiddlewareWrapper(MiddlewareProtocol):
             app: An ASGIApp, this value is the next ASGI handler to call in the middleware stack.
             config: An instance of SessionAuth
         """
-        super().__init__(app)
         self.app = app
         self.has_wrapped_middleware = False
         self.config = config
@@ -166,11 +164,13 @@ class MiddlewareWrapper(MiddlewareProtocol):
             None
         """
         if not self.has_wrapped_middleware:
-            starlite_app = cast("Starlite", scope["app"])
+            starlite_app = scope["app"]
             auth_middleware = SessionAuthMiddleware(
                 app=self.app,
                 exclude=self.config.exclude,
-                retrieve_user_handler=cast("Callable[[Dict[str, Any]], Awaitable[Any]]", self.config.retrieve_user_handler),  # type: ignore
+                retrieve_user_handler=cast(
+                    "Callable[[Dict[str, Any]], Awaitable[Any]]", self.config.retrieve_user_handler
+                ),
             )
             exception_middleware = ExceptionHandlerMiddleware(
                 app=auth_middleware,
@@ -200,7 +200,7 @@ class SessionAuthMiddleware(AbstractAuthenticationMiddleware):
         super().__init__(app=app, exclude=exclude)
         self.retrieve_user_handler = retrieve_user_handler
 
-    async def authenticate_request(self, connection: "HTTPConnection") -> AuthenticationResult:
+    async def authenticate_request(self, connection: "ASGIConnection[Any, Any, Any]") -> AuthenticationResult:
         """Implementation of the authentication method specified by Starlite's.
 
         [AbstractAuthenticationMiddleware][starlite.middleware.authentication.AbstractAuthenticationMiddleware].

@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "starlite-sessions"
-version = "1.1.0"
+version = "1.2.0"
 description = "Starlite Sessions Toolkit"
 authors = ["Na'aman Hirschfeld <nhirschfeld@gmail.com>"]
 maintainers = ["Na'aman Hirschfeld <nhirschfeld@gmail.com>", "Peter Schutt <peter.github@proton.me>", "Cody Fincher <cody.fincher@gmail.com>"]
@@ -20,6 +20,7 @@ classifiers = [
     "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
     "Programming Language :: Python",
     "Topic :: Internet :: WWW/HTTP",
     "Topic :: Software Development :: Libraries",
@@ -33,7 +34,7 @@ packages = [
 
 [tool.poetry.dependencies]
 python = ">=3.7,<4.0"
-starlite = ">=1.17.1"
+starlite = ">=1.24.0"
 
 [tool.poetry.dev-dependencies]
 mkdocs_gen_files = "*"
@@ -41,7 +42,8 @@ pre-commit = "*"
 pytest = "*"
 pytest-asyncio = "*"
 pytest-cov = "*"
-starlite = {version = ">=1.17.1", extras = ["full"]}
+httpx = "*"
+cryptography = "*"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
