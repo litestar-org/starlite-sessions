@@ -40,7 +40,7 @@ packages = [
 
 [tool.poetry.dependencies]
 python = ">=3.7,<4.0"
-starlite = ">=1.24.0"
+starlite = "^1.34.0"
 
 [tool.poetry.dev-dependencies]
 mkdocs_gen_files = "*"
