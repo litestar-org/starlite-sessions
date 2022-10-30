@@ -34,7 +34,7 @@ tests-no-zope = ["cloudpickle", "coverage[toml] (>=5.0.2)", "hypothesis", "mypy 
 name = "certifi"
 version = "2022.9.24"
 description = "Python package for providing Mozilla's CA Bundle."
-category = "dev"
+category = "main"
 optional = false
 python-versions = ">=3.6"
 
@@ -188,7 +188,7 @@ dev = ["flake8", "markdown", "twine", "wheel"]
 name = "h11"
 version = "0.12.0"
 description = "A pure-Python, bring-your-own-I/O implementation of HTTP/1.1"
-category = "dev"
+category = "main"
 optional = false
 python-versions = ">=3.6"
 
@@ -196,7 +196,7 @@ python-versions = ">=3.6"
 name = "httpcore"
 version = "0.15.0"
 description = "A minimal low-level HTTP client."
-category = "dev"
+category = "main"
 optional = false
 python-versions = ">=3.7"
 
@@ -214,7 +214,7 @@ socks = ["socksio (>=1.0.0,<2.0.0)"]
 name = "httpx"
 version = "0.23.0"
 description = "The next generation HTTP client."
-category = "dev"
+category = "main"
 optional = false
 python-versions = ">=3.7"
 
@@ -580,7 +580,7 @@ pyyaml = "*"
 name = "rfc3986"
 version = "1.5.0"
 description = "Validating URI References per RFC 3986"
-category = "dev"
+category = "main"
 optional = false
 python-versions = "*"
 
@@ -636,7 +636,7 @@ full = ["httpx (>=0.22.0)", "itsdangerous", "jinja2", "python-multipart", "pyyam
 
 [[package]]
 name = "starlite"
-version = "1.34.0"
+version = "1.35.0"
 description = "Light-weight and flexible ASGI API Framework"
 category = "main"
 optional = false
@@ -644,6 +644,7 @@ python-versions = ">=3.7,<4.0"
 
 [package.dependencies]
 anyio = ">=3"
+httpx = ">=0.22"
 orjson = "*"
 pydantic = "*"
 pydantic-factories = "*"
@@ -656,12 +657,11 @@ typing-extensions = "*"
 [package.extras]
 brotli = ["brotli"]
 cryptography = ["cryptography"]
-full = ["brotli", "cryptography", "httpx (>=0.22)", "picologging", "structlog"]
+full = ["brotli", "cryptography", "picologging", "structlog"]
 memcached = ["aiomcache"]
 picologging = ["picologging"]
 redis = ["redis[hiredis]"]
 structlog = ["structlog"]
-testing = ["cryptography", "httpx (>=0.22)"]
 
 [[package]]
 name = "starlite-multipart"
@@ -750,7 +750,7 @@ testing = ["func-timeout", "jaraco.itertools", "pytest (>=6)", "pytest-black (>=
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.7,<4.0"
-content-hash = "c0c849233e9876d869b254a6a2d89f498f2c679f3cf6d6232accc590e081bd90"
+content-hash = "18ea203713d9864e249344d22847c3e04a41a20abe501398210bcef1b876b173"
 
 [metadata.files]
 anyio = [
@@ -1235,8 +1235,8 @@ starlette = [
     {file = "starlette-0.21.0.tar.gz", hash = "sha256:b1b52305ee8f7cfc48cde383496f7c11ab897cd7112b33d998b1317dc8ef9027"},
 ]
 starlite = [
-    {file = "starlite-1.34.0-py3-none-any.whl", hash = "sha256:f8750fcabecec032988375a919be3accd45bfc9151e76c5f58013fc5dfdc2dd9"},
-    {file = "starlite-1.34.0.tar.gz", hash = "sha256:f184da244f7154b91eabdbe1363d9faeedb3327c1068127e50c51bdd2dff8b06"},
+    {file = "starlite-1.35.0-py3-none-any.whl", hash = "sha256:91107d8b0dfab4c39e08967b26cadae1b5eca729e2d12e77cac932dad0c6a64d"},
+    {file = "starlite-1.35.0.tar.gz", hash = "sha256:457e3bd9869f482c01bb455d426361a4cdb59151dcca0119ee126d16713395dc"},
 ]
 starlite-multipart = [
     {file = "starlite-multipart-1.2.0.tar.gz", hash = "sha256:9ba2108cfd47de07240dc90e55397080ec9ca0c6992ec1097a02dd32ba4ca593"},
