@@ -36,8 +36,9 @@ from typing import Any, Optional, Literal
 
 from pydantic import BaseModel, EmailStr, SecretStr
 from starlite import OpenAPIConfig, Request, Starlite, get, post
+from starlite.middleware.session.cookie_backend import CookieBackendConfig
 
-from starlite_sessions import SessionAuth
+from starlite_sessions import SessionAuthConfig
 
 
 # Let's assume we have a User model that is a pydantic model.
@@ -91,12 +92,17 @@ async def retrieve_user_handler(session: dict[str, Any]) -> Optional[User]:
 #
 # Tip: It's also a good idea to use the pydantic settings
 # management functionality.
-session_auth = SessionAuth(
+session_auth = SessionAuthConfig(
     retrieve_user_handler=retrieve_user_handler,
-    secret=os.environ.get("JWT_SECRET", os.urandom(16)),
     # exclude any URLs that should not have authentication.
     # We exclude the documentation URLs, signup and login.
     exclude=["/login", "/signup", "/schema"],
+    backend_config=CookieBackendConfig(
+        secret=os.environ.get("JWT_SECRET", os.urandom(16)),
+        exclude=[
+            "/no-session"
+        ],  # this disabled the session middleware for specific routes
+    ),
 )
 
 
@@ -146,6 +152,12 @@ def get_user(request: Request[User, dict[Literal["user_id"], str]]) -> Any:
     # `request.user`, which is the authenticated user returned
     # by the 'retrieve_user_handler' function we passed to SessionAuth.
     return request.user
+
+
+@get("/no-session")
+def get_no_session(request: Request) -> Any:
+    # session middleware will be bypassed for this handler
+    return True
 
 
 # We add the session security schema to the OpenAPI config.

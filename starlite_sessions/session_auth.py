@@ -1,3 +1,4 @@
+import warnings
 from typing import (
     TYPE_CHECKING,
     Any,
@@ -10,7 +11,7 @@ from typing import (
     cast,
 )
 
-from pydantic import validator
+from pydantic import BaseModel, validator
 from pydantic_openapi_schema.v3_1_0 import (
     Components,
     SecurityRequirement,
@@ -23,19 +24,23 @@ from starlite.middleware.authentication import (
     AuthenticationResult,
 )
 from starlite.middleware.base import DefineMiddleware, MiddlewareProtocol
-from starlite.middleware.session import SessionCookieConfig, SessionMiddleware
+from starlite.middleware.session.base import BaseBackendConfig, SessionMiddleware
+from starlite.middleware.session.cookie_backend import (
+    CookieBackend,
+    CookieBackendConfig,
+)
 from starlite.types import Empty, SyncOrAsyncUnion
 from starlite.utils import AsyncCallable
 
 if TYPE_CHECKING:  # pragma: no cover
     from starlite.connection import ASGIConnection
+    from starlite.middleware.session.base import BaseSessionBackend
     from starlite.types import ASGIApp, Receive, Scope, Send
-
 
 RetrieveUserHandler = Callable[[Dict[str, Any]], SyncOrAsyncUnion[Any]]
 
 
-class SessionAuth(SessionCookieConfig):
+class BaseSessionAuthConfig(BaseModel):
     retrieve_user_handler: RetrieveUserHandler
     """
     Callable that receives the session dictionary after it has been decoded and returns a 'user' value.
@@ -133,8 +138,19 @@ class SessionAuth(SessionCookieConfig):
         return {self.openapi_security_scheme_name: []}
 
 
+class SessionAuth(BaseSessionAuthConfig, CookieBackendConfig):
+    exclude_session: Optional[Union[str, List[str]]] = None
+    """
+    A pattern or list of patterns to skip in the session middleware.
+    """
+
+
+class SessionAuthConfig(BaseSessionAuthConfig):
+    backend_config: BaseBackendConfig
+
+
 class MiddlewareWrapper(MiddlewareProtocol):
-    def __init__(self, app: "ASGIApp", config: SessionAuth):
+    def __init__(self, app: "ASGIApp", config: Union[SessionAuth, SessionAuthConfig]):
         """This class creates a small stack of middlewares: It wraps the
         SessionAuthMiddleware inside ExceptionHandlerMiddleware, and it wraps
         this inside SessionMiddleware. This allows the auth middleware to raise
@@ -177,7 +193,20 @@ class MiddlewareWrapper(MiddlewareProtocol):
                 exception_handlers=starlite_app.exception_handlers or {},
                 debug=starlite_app.debug,
             )
-            self.app = SessionMiddleware(app=exception_middleware, config=self.config)
+            backend: "BaseSessionBackend[Any]"
+            if isinstance(self.config, SessionAuth):
+                warnings.warn(
+                    "SessionAuth is deprecated and will be removed in a future version."
+                    " use SessionAuthConfig instead.",
+                    PendingDeprecationWarning,
+                )
+                new_config = CookieBackendConfig(
+                    **self.config.dict(exclude={"exclude"}), exclude=self.config.exclude_session
+                )
+                backend = CookieBackend(config=new_config)
+            else:
+                backend = self.config.backend_config._backend_class(config=self.config.backend_config)
+            self.app = SessionMiddleware(app=exception_middleware, backend=backend)
             self.has_wrapped_middleware = True
         await self.app(scope, receive, send)
 

@@ -1,7 +1,8 @@
 from os import urandom
-from typing import Any, Dict, Optional
+from typing import Any, Dict, Optional, Union
 from uuid import uuid4
 
+import pytest
 from pydantic import BaseModel, SecretBytes
 from starlette.status import (
     HTTP_200_OK,
@@ -10,9 +11,10 @@ from starlette.status import (
     HTTP_401_UNAUTHORIZED,
 )
 from starlite import OpenAPIConfig, Request, Starlite, delete, get, post
+from starlite.middleware.session.memory_backend import MemoryBackendConfig
 from starlite.testing import create_test_client
 
-from starlite_sessions import SessionAuth
+from starlite_sessions import SessionAuth, SessionAuthConfig
 
 
 class User(BaseModel):
@@ -21,7 +23,25 @@ class User(BaseModel):
     email: str
 
 
-def test_authentication() -> None:
+user_instance = User(id=str(uuid4()), name="Moishe Zuchmir", email="moishe@zuchmir.com")
+
+
+def retrieve_user_handler(session_data: Dict[str, Any]) -> Optional[User]:
+    if session_data["id"] == user_instance.id:
+        return user_instance
+    return None
+
+
+@pytest.mark.parametrize(
+    "session_auth",
+    [
+        SessionAuth(secret=SecretBytes(urandom(16)), exclude=["login"], retrieve_user_handler=retrieve_user_handler),
+        SessionAuthConfig(
+            retrieve_user_handler=retrieve_user_handler, exclude=["login"], backend_config=MemoryBackendConfig()
+        ),
+    ],
+)
+def test_authentication(session_auth: Union[SessionAuth, SessionAuthConfig]) -> None:
     @post("/login")
     def login_handler(request: Request[Any, Any], data: Dict[str, Any]) -> None:
         request.set_session(data)
@@ -34,19 +54,9 @@ def test_authentication() -> None:
     def get_user_handler(request: Request[User, Any]) -> User:
         return request.user
 
-    user_instance = User(id=str(uuid4()), name="Moishe Zuchmir", email="moishe@zuchmir.com")
-
-    def retrieve_user_handler(session_data: Dict[str, Any]) -> Optional[User]:
-        if session_data["id"] == user_instance.id:
-            return user_instance
-        return None
-
-    session_auth = SessionAuth(
-        secret=SecretBytes(urandom(16)), exclude=["login"], retrieve_user_handler=retrieve_user_handler
-    )
-
     with create_test_client(
-        route_handlers=[login_handler, delete_user_handler, get_user_handler], middleware=[session_auth.middleware]
+        route_handlers=[login_handler, delete_user_handler, get_user_handler],
+        middleware=[session_auth.middleware],
     ) as client:
         response = client.get(f"user/{user_instance.id}")
         assert response.status_code == HTTP_401_UNAUTHORIZED

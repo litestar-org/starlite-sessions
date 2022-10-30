@@ -76,11 +76,6 @@ repos:
     rev: v0.4.0
     hooks:
       - id: flake8-markdown
-  - repo: https://github.com/dosisod/refurb
-    rev: v1.2.0
-    hooks:
-      - id: refurb
-        additional_dependencies: [starlite, mkdocs_gen_files]
   - repo: https://github.com/pycqa/pylint
     rev: "v2.15.3"
     hooks:

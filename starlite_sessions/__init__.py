@@ -1,3 +1,3 @@
-from starlite_sessions.session_auth import SessionAuth
+from starlite_sessions.session_auth import SessionAuth, SessionAuthConfig
 
-__all__ = ["SessionAuth"]
+__all__ = ["SessionAuth", "SessionAuthConfig"]
