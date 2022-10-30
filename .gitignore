@@ -4,3 +4,4 @@
 .hypothesis/
 __pycache__/
 *.iml
+/.python-version

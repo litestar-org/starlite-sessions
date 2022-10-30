@@ -40,12 +40,12 @@ packages = [
 
 [tool.poetry.dependencies]
 python = ">=3.7,<4.0"
-starlite = "^1.35.0"
+starlite = "^1.35.1"
 
 [tool.poetry.dev-dependencies]
 mkdocs_gen_files = "*"
 pre-commit = "*"
-pytest = "*"
+pytest = "^7.2.0"
 pytest-asyncio = "*"
 pytest-cov = "*"
 httpx = "*"
