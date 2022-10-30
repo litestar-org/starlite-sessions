@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "starlite-sessions"
-version = "1.2.0"
+version = "1.3.0"
 description = "Starlite Sessions Toolkit"
 authors = ["Na'aman Hirschfeld <nhirschfeld@gmail.com>"]
 maintainers = [
