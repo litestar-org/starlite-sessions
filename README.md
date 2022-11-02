@@ -1,4 +1,7 @@
 # Starlite Sessions
+<!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
+[![All Contributors](https://img.shields.io/badge/all_contributors-1-orange.svg?style=flat-square)](#contributors-)
+<!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 <!-- markdownlint-disable -->
 <img alt="Starlite logo" src="./starlite-banner.svg" width="100%" height="auto">
@@ -176,3 +179,25 @@ Starlite and all its official libraries are open to contributions big and small.
 You can always [join our discord](https://discord.gg/X3FJqy8d2j) server
 or [join our Matrix](https://matrix.to/#/#starlitespace:matrix.org) space to discuss contributions and project
 maintenance. For guidelines on how to contribute to this library, please see `CONTRIBUTING.md` in the repository's root.
+
+## Contributors ✨
+
+Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
+
+<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
+<!-- prettier-ignore-start -->
+<!-- markdownlint-disable -->
+<table>
+  <tbody>
+    <tr>
+      <td align="center"><a href="https://github.com/jtfidje"><img src="https://avatars.githubusercontent.com/u/15209323?v=4?s=100" width="100px;" alt="Jahn Thomas Fidje"/><br /><sub><b>Jahn Thomas Fidje</b></sub></a><br /><a href="https://github.com/starlite-api/starlite-sessions/commits?author=jtfidje" title="Documentation">📖</a></td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- markdownlint-restore -->
+<!-- prettier-ignore-end -->
+
+<!-- ALL-CONTRIBUTORS-LIST:END -->
+
+This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
