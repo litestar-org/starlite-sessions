@@ -107,7 +107,7 @@ session_auth = SessionAuth(
 @post("/login")
 async def login(data: UserLoginPayload, request: Request) -> User:
     # we received log-in data via post.
-    # out login handler should retrieve from persistence (a db etc.)
+    # our login handler should retrieve from persistence (a db etc.)
     # the user data and verify that the login details
     # are correct. If we are using passwords, we should check that
     # the password hashes match etc. We will simply assume that we
